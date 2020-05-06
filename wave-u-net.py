@@ -22,7 +22,7 @@ import pyqtgraph.exporters as pgex
 
 # Sound
 from scipy.io import wavfile
-from pypesq import pypesq
+from pesq import pesq
 
 # Original Functions
 from settings import settings
@@ -40,7 +40,7 @@ def pesq_score(clean_wavs, reconst_wavs, band='wb'):
     for i, (clean_, reconst_) in enumerate(zip(clean_wavs, reconst_wavs)):
         rate, ref = wavfile.read(clean_)
         rate, deg = wavfile.read(reconst_)
-        score = pypesq(rate, ref, deg, band)
+        score = pesq(rate, ref, deg, band)
         scores.append(score)
         print('Score : {0} ... {1}/{2}'.format(score, i, len(clean_wavs)))
 
@@ -452,16 +452,16 @@ if __name__ == '__main__':
         ctx = get_extension_context('cudnn', device_id=args.device_id)
 
     ## Training or Prediction
-    Train = 1
+    Train = 0
     if Train:
         # Training
         nn.set_default_context(ctx)
         train(args)
     else:
         # Test
-        # test(args)
+        #test(args)
         import glob
         clean_wavs = glob.glob(args.clean_test_path + '/*.wav')
-        reconst_wavs = glob.glob('pred_100_conv' + '/*.wav')
+        reconst_wavs = glob.glob('pred_80' + '/*.wav')
         pesq_score(clean_wavs, reconst_wavs)
 
